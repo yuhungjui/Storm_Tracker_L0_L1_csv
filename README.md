@@ -1,4 +1,4 @@
-# Storm Tracker L0-L1 SHARPpy
+# Storm Tracker L0-L1 CSV
 
 Convert Level-0 Storm Tracker (ST) data to Level-1 csv format for general usage.
 The output ascii file can be directly imported to ASPEN for further QC procedures.
