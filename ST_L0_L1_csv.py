@@ -1,8 +1,8 @@
 """
-Convert Level-0 Storm Tracker data to Level-1 SHARPpy format for skew-T plot using SHARPpy.
+Convert Level-0 Storm Tracker data to Level-1 csv format for general usages and further QC procedures.
 
 Hungjui Yu
-20200517
+20210706
 """
 
 # %%
