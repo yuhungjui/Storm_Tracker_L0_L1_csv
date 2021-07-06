@@ -1,11 +1,11 @@
 # Storm Tracker L0-L1 SHARPpy
 
-Convert Level-0 Storm Tracker (ST) data to Level-1 SHARPpy format for skew-T plot using SHARPpy.
-The output ascii file can be directly read by SHARPpy for skew-T diagram.
+Convert Level-0 Storm Tracker (ST) data to Level-1 csv format for general usage.
+The output ascii file can be directly imported to ASPEN for further QC procedures.
 
-More information on **SHARPpy**, please see: https://sharppy.github.io/SHARPpy/index.html
+More information on **ASPEN**, please see: https://www.eol.ucar.edu/software/aspen & https://ncar.github.io/aspendocs/index.html
 
-Last update - 20210526 - Hungjui Yu
+Last update - 20210706 - Hungjui Yu
 
 ## Dependencies
 
