@@ -14,13 +14,12 @@ More information on **metpy**, please see: https://unidata.github.io/MetPy/lates
 
 ## How to run?
 
-In single ST mode:
+### In single ST mode:
 ```
 python3 ST_L0_L1_csv.py path_to_ST_file log_launch_time_YYYYMMDDHHmmss path_to_output
 ```
 
-In batch mode for multiple STs:
-
+### In batch mode for multiple STs:
 ```
 python3 ST_L0_L1_csv_batch.py
 ```
