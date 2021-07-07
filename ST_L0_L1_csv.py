@@ -1,96 +1,140 @@
 """
-Convert Level-0 Storm Tracker data to Level-1 csv format for general usages and further QC procedures.
-
+Transform Storm Tracker L0 data to L1 csv format file.
 Hungjui Yu
 20210706
+
+How to run:
+ST_L0_L1_csv path_to_ST_file log_launch_time_YYYYMMDDHHmmss path_to_output
 """
 
-# %%
-import sys
 import pandas as pd
 from datetime import datetime
 import pytz
+# import metpy.calc as mpcalc
 from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import units
 
 # %%
 # Set ST node number:
-
 ST_no = sys.argv[1][-8:-4]
 
-# %%
 # Set ST launch time (UTC):
-
 launch_time_from_log = sys.argv[2]
 
-# %%
-# Specified timezones:
+# Set L0 ST files path:
+ST_file_path = sys.argv[1]
 
-# pytz.all_timezones
-tz_utc = pytz.timezone('UTC')
-tz_fc = pytz.timezone('US/Mountain')
-
-# %%
-# Specified the launch time in UTC:
-
-launch_time = datetime.strptime(launch_time_from_log, '%Y%m%d%H%M%S')
-launch_time_utc = tz_utc.localize(launch_time)
+# Set L1 ST file output path:
+output_path = sys.argv[3]
 
 # %%
-# Load raw data:
-# L0_raw_data = pd.read_csv('../L0/' + launch_time_from_log[:8] + '/no_{}.csv'.format(ST_no))
-L0_raw_data = pd.read_csv(sys.argv[1])
+# Functions:
+
+def load_st_file(ST_no, launch_time_from_log, ST_file_path):
+
+    # Specified timezones:
+    # pytz.all_timezones
+    tz_utc = pytz.timezone('UTC')
+    tz_fc = pytz.timezone('US/Mountain')
+
+    # Specified the launch time in UTC:
+    launch_time = datetime.strptime(launch_time_from_log, '%Y%m%d%H%M%S')
+    launch_time_utc = tz_utc.localize(launch_time)
+
+    # print(launch_time_utc)
+    # print(launch_time_from_log[:8])
+
+    # Load raw data:
+    # L0_raw_data = pd.read_csv(ST_file_path + '/no_{}.csv'.format(ST_no))
+    L0_raw_data = pd.read_csv(ST_file_path)
+
+    return launch_time_utc, L0_raw_data
+
+def conversion_L0_L1(loaded_ST_file):
+
+    launch_time_utc = loaded_ST_file[0]
+    L0_raw_data = loaded_ST_file[1]
+
+    tz_utc = pytz.timezone('UTC')
+
+    # Convert the data time to datetime object:
+    L0_raw_data['Time'] = pd.to_datetime(L0_raw_data['Time'], utc=tz_utc)
+
+    # Calculate dew-point temperature in raw data:
+    L0_raw_data['dT(degC)'] = dewpoint_from_relative_humidity((L0_raw_data['Temperature(degree C)'].to_numpy() * units.degC).to(units.K), L0_raw_data['Humidity(%)'].to_numpy() / 100.)
+
+    # Convert wind speed in raw data:
+    # L0_raw_data['WS(kts)'] = (L0_raw_data['Speed(km/hr)'].to_numpy() * units.kilometer_per_hour).to(units.knot)
+    L0_raw_data['WS(m/s)'] = (L0_raw_data['Speed(km/hr)'].to_numpy() * units.kilometer_per_hour).to(units.meter_per_second)
+
+    # Convert wind direction in raw data:
+    L0_raw_data.loc[L0_raw_data['Direction(degree)'] <= 180, 'WDIR'] = L0_raw_data['Direction(degree)'] + 180
+    L0_raw_data.loc[L0_raw_data['Direction(degree)'] > 180, 'WDIR'] = L0_raw_data['Direction(degree)'] - 180
+    L0_raw_data.loc[L0_raw_data['Speed(km/hr)'] == 0, 'WDIR'] = 0
+
+    # Find the index of launch time and convert L0 to L1 data:
+    L1_data = L0_raw_data[L0_raw_data['Time'] >= launch_time_utc]
+
+    # Set Time(sec) in L1 data:
+    L1_data['Time(sec)'] = (L1_data['Time']-launch_time_utc).dt.total_seconds()
+
+    return L1_data
+
+def output_L1():
+
+    # Output L1 data (csv format):
+
+    L1_csv_filename = output_path + 'no_{}_L1_aspen.csv'.format(ST_no)
+
+    with open(L1_csv_filename, 'w') as file:
+
+        # Required fields:
+        file.write('FileFormat,CSV\n')
+        file.write('Year,{}\n'.format(loaded_ST_file[0].year))
+        file.write('Month,{:02d}\n'.format(loaded_ST_file[0].month))
+        file.write('Day,{:02d}\n'.format(loaded_ST_file[0].day))
+        file.write('Hour,{:02d}\n'.format(loaded_ST_file[0].hour))
+        file.write('Minute,{:02d}\n'.format(loaded_ST_file[0].minute))
+        file.write('Second,{:02d}\n'.format(loaded_ST_file[0].second))
+
+        file.write('Ascending,"true"\n')
+
+        # Optional fields:
+        file.write('latitude,40.590000,"units=deg"\n')
+        file.write('longitude,-105.141500,"units=deg"\n')
+        file.write('altitude,1571.9,"units=m"\n')
+        file.write('gpsaltitude,1571.9,"units=m"\n')
+        file.write('project,"PRE-CIP-2021"\n')
+        file.write('agency,"CSU"\n')
+        file.write('sondeid,"{}"\n'.format(ST_no))
+        file.write('sondetype,"Storm Tracker"\n')
+        file.write('launchsite,"Christman Field"\n')
+
+        # Data headers:
+        file.write('Fields,Time,Pressure,temp,RH,Speed,Direction,Latitude,Longitude,gpsalt,sats\n')
+        file.write('Units,sec,mb,deg C,%,m/s,deg,deg,deg,m\n')
+
+        # Data fields:
+
+        for index, row in L1_data.iterrows():
+
+            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%7.1f\n'\
+                       % (row['Time(sec)']\
+                        , row['Pressure(hPa)']\
+                        , row['Temperature(degree C)']\
+                        , row['Humidity(%)']\
+                        , row['WS(m/s)']\
+                        , row['Direction(degree)']\
+                        , row['Lat']\
+                        , row['Lon']\
+                        , row['Height(m)']\
+                        , row['Sat']\
+                         )\
+                      )
 
 # %%
-# Convert the data time to datetime object:
+# Run:
 
-L0_raw_data['Time'] = pd.to_datetime(L0_raw_data['Time'], utc=tz_utc)
-
-# %%
-# Calculate dew-point temperature in raw data:
-
-L0_raw_data['dT(degC)'] = dewpoint_from_relative_humidity((L0_raw_data['Temperature(degree C)'].to_numpy() * units.degC).to(units.K), L0_raw_data['Humidity(%)'].to_numpy() / 100.)
-
-# %%
-# Convert wind speed in raw data:
-
-L0_raw_data['WS(kts)'] = (L0_raw_data['Speed(km/hr)'].to_numpy() * units.kilometer_per_hour).to(units.knot)
-
-# %%
-# Convert wind direction in raw data:
-
-L0_raw_data.loc[L0_raw_data['Direction(degree)'] <= 180, 'WDIR'] = L0_raw_data['Direction(degree)'] + 180
-L0_raw_data.loc[L0_raw_data['Direction(degree)'] > 180, 'WDIR'] = L0_raw_data['Direction(degree)'] - 180
-L0_raw_data.loc[L0_raw_data['Speed(km/hr)'] == 0, 'WDIR'] = 0
-
-# %%
-# Retrieve L1 data after launch time in ST Time & before balloon desecnds:
-
-L1_data_sharppy = L0_raw_data[ ( L0_raw_data['Time'] >= launch_time_utc ) & ( L0_raw_data.index <= L0_raw_data['Pressure(hPa)'].idxmin() ) ] \
-                              [['Pressure(hPa)' \
-                              ,'Height(m)' \
-                              ,'Temperature(degree C)' \
-                              ,'dT(degC)' \
-                              ,'WDIR' \
-                              ,'WS(kts)'] \
-                              ].iloc[::10,:]
-
-# %%
-# Output L1 data (ascii format):
-
-L1_sharppy_filename = 'no_{}_L1_sharppy.txt'.format(ST_no)
-
-with open(L1_sharppy_filename, 'w') as file:
-
-    file.write('%TITLE%\n')
-    file.write(' CSU-PRECIP-ST-{}'.format(ST_no) + ' ' + launch_time_from_log[2:8] + '/' + launch_time_from_log[8:12] + '\n')
-    file.write('\n')
-    file.write('   LEVEL       HGHT       TEMP       DWPT       WDIR       WSPD\n')
-    file.write('-------------------------------------------------------------------\n')
-    file.write('%RAW%\n')
-
-L1_data_sharppy.to_csv(L1_sharppy_filename, mode='a', header=False, index=False, , float_format='%.2f')
-
-with open(L1_sharppy_filename, 'a') as file:
-
-    file.write('%END%')
+loaded_ST_file = load_st_file(ST_no, launch_time_from_log, ST_file_path)
+L1_data = conversion_L0_L1(loaded_ST_file)
+output_L1()
