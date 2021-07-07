@@ -14,22 +14,22 @@ More information on **metpy**, please see: https://unidata.github.io/MetPy/lates
 
 ## How to run?
 
+In single ST mode:
 ```
-python3 ST_L0_L1_SHARPpy.py [/path/to/ST/file/no_XXXX.csv] [log_launch_time_YYYYMMDDHHmmss]
+python3 ST_L0_L1_csv.py path_to_ST_file log_launch_time_YYYYMMDDHHmmss path_to_output
+```
+
+In batch mode for multiple STs:
+
+```
+python3 ST_L0_L1_csv_batch.py
 ```
 
 The scripit us supported by python3.
-
-Where XXXX is the serial number of the ST.
-Specifically for PRE-CIP 2021 field campaign, the ST serial numbers are 2XXX.
 The input launch time is a 14-digits UTC date and time from year to second, YYYYMMDDHHmmss.
 
 For example,
 
 ```
-python3 ST_L0_L1_SHARPpy.py ./Example/no_2968.csv 20210503184852
+python3 ST_L0_L1_csv.py ./Example/no_2968.csv 20210503184852
 ```
-
-## p.s.
-
-Feel free to play around the scripts and data in the Example folder.
