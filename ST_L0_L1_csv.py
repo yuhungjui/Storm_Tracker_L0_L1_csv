@@ -7,6 +7,7 @@ How to run:
 ST_L0_L1_csv path_to_ST_file log_launch_time_YYYYMMDDHHmmss path_to_output
 """
 
+import sys
 import pandas as pd
 from datetime import datetime
 import pytz
@@ -118,7 +119,7 @@ def output_L1():
 
         for index, row in L1_data.iterrows():
 
-            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%7.1f\n'\
+            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,%7.1f,%2.0f\n'\
                        % (row['Time(sec)']\
                         , row['Pressure(hPa)']\
                         , row['Temperature(degree C)']\
