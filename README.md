@@ -5,7 +5,7 @@ The output ascii file can be directly imported to ASPEN for further QC procedure
 
 More information on **ASPEN**, please see: https://www.eol.ucar.edu/software/aspen & https://ncar.github.io/aspendocs/index.html
 
-Last update - 20210706 - Hungjui Yu
+Last update - 20210707 - Hungjui Yu
 
 ## Dependencies
 

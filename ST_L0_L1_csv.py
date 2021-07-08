@@ -74,7 +74,7 @@ def conversion_L0_L1(loaded_ST_file):
     L0_raw_data.loc[L0_raw_data['Speed(km/hr)'] == 0, 'WDIR'] = 0
 
     # Find the index of launch time and convert L0 to L1 data:
-    L1_data = L0_raw_data[L0_raw_data['Time'] >= launch_time_utc]
+    L1_data = L0_raw_data[ ( L0_raw_data['Time'] >= launch_time_utc ) & ( L0_raw_data.index <= L0_raw_data['Pressure(hPa)'].idxmin() ) ]
 
     # Set Time(sec) in L1 data:
     L1_data['Time(sec)'] = (L1_data['Time']-launch_time_utc).dt.total_seconds()
@@ -103,6 +103,9 @@ def output_L1():
         # Optional fields:
         file.write('latitude,40.590000,"units=deg"\n')
         file.write('longitude,-105.141500,"units=deg"\n')
+        file.write('pressure,841.4,"units=hPa"\n')
+        file.write('temperature,21.6,"units=deg C"\n')
+        file.write('rh,56.9,"units=%"\n')
         file.write('altitude,1571.9,"units=m"\n')
         file.write('gpsaltitude,1571.9,"units=m"\n')
         file.write('project,"PRE-CIP-2021"\n')
@@ -112,7 +115,7 @@ def output_L1():
         file.write('launchsite,"Christman Field"\n')
 
         # Data headers:
-        file.write('Fields,Time,Pressure,temp,RH,Speed,Direction,Latitude,Longitude,gpsalt,sats\n')
+        file.write('Fields,Time,Pressure,temperature,RH,Speed,Direction,Latitude,Longitude,gpsalt,sats\n')
         file.write('Units,sec,mb,deg C,%,m/s,deg,deg,deg,m\n')
 
         # Data fields:
