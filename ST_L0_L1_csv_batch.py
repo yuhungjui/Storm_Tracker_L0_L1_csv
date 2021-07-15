@@ -1,4 +1,3 @@
-# %%
 """
 <br>Transform Storm Tracker L0 data to L1 csv format file (batch mode).<br>
 Hungjui Yu<br>
@@ -41,11 +40,11 @@ final_date = dt.datetime(2021,7,9)
 
 # %%
 def read_in_ST_info(log_file):
-    
+
     # ST_log = pd.read_excel(log_file)
     # ST_log = pd.read_excel(log_file, engine='openpyxl')
     ST_log = pd.read_csv(log_file)
-    
+
     return ST_log
 
 ST_info = read_in_ST_info(ST_info_file)
@@ -61,14 +60,14 @@ ST_info = read_in_ST_info(ST_info_file)
 
 
 for index, row in ST_info.iterrows():
-    
+
     if dt.datetime.strptime(str(row['Date']), '%Y%m%d') <= final_date:
-        
+
         print(row['Date'],row['Launch_T'])
 
 # %%
-def load_st_file(ST_no, launch_time_from_log, ST_file_path):    
-    
+def load_st_file(ST_no, launch_time_from_log, ST_file_path):
+
     # Specified timezones:
     # pytz.all_timezones
     tz_utc = pytz.timezone('UTC')
@@ -80,10 +79,10 @@ def load_st_file(ST_no, launch_time_from_log, ST_file_path):
 
     # print(launch_time_utc)
     # print(launch_time_from_log[:8])
-    
+
     # Load raw data:
     L0_raw_data = pd.read_csv(ST_file_path + '/no_{}.csv'.format(ST_no))
-    
+
     return launch_time_utc, L0_raw_data
 
 # %%
@@ -91,7 +90,7 @@ def conversion_L0_L1(loaded_ST_file):
 
     launch_time_utc = loaded_ST_file[0]
     L0_raw_data = loaded_ST_file[1]
-    
+
     tz_utc = pytz.timezone('UTC')
 
     # Convert the data time to datetime object:
@@ -108,13 +107,13 @@ def conversion_L0_L1(loaded_ST_file):
     L0_raw_data.loc[L0_raw_data['Direction(degree)'] <= 180, 'WDIR'] = L0_raw_data['Direction(degree)'] + 180
     L0_raw_data.loc[L0_raw_data['Direction(degree)'] > 180, 'WDIR'] = L0_raw_data['Direction(degree)'] - 180
     L0_raw_data.loc[L0_raw_data['Speed(km/hr)'] == 0, 'WDIR'] = 0
-    
+
     # Find the index of launch time and convert L0 to L1 data:
     L1_data = L0_raw_data[L0_raw_data['Time'] >= launch_time_utc]
-    
+
     # Set Time(sec) in L1 data:
     L1_data['Time(sec)'] = (L1_data['Time']-launch_time_utc).dt.total_seconds()
-    
+
     return L1_data
 
 # %%
