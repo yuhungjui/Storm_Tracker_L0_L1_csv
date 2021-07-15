@@ -82,7 +82,7 @@ def conversion_L0_L1(loaded_ST_file):
     L0_raw_data.loc[L0_raw_data['Speed(km/hr)'] == 0, 'WDIR'] = 0
 
     # Find the index of launch time and convert L0 to L1 data:
-    L1_data = L0_raw_data[L0_raw_data['Time'] >= launch_time_utc].copy()
+    L1_data = L0_raw_data[ ( L0_raw_data['Time'] >= launch_time_utc ) & ( L0_raw_data.index <= L0_raw_data['Pressure(hPa)'].idxmin() ) ].copy()
 
     # Set Time(sec) in L1 data:
     L1_data['Time(sec)'] = (L1_data['Time']-launch_time_utc).dt.total_seconds()
