@@ -1,0 +1,27 @@
+Date,Nominal_T,Launch_T,ST_No,Co-launch_flag,sfc_P,sfc_T,sfc_RH,Sky_Condition,Remarks,MPD
+20210503,18,184852,2968,1,841,4.8,81.1,8,sfc. measurement from Christman Field,0
+20210504,18,191040,2134,0,nan,11.3,53.6,1,sfc. measurement from Christman Field,0
+20210505,18,183107,2133,1,847.5,11.9,55,6,sfc. measurement from Christman Field,0
+20210508,18,175226,1841,1,833,22.2,21.3,2,sfc. measurement from Christman Field,0
+20210516,18,182410,2130,1,827.61,14.8,66.9,8,sfc. measurement from Christman Field,0
+20210522,18,183850,2127,1,846.4,16.1,59.1,5,sfc. measurement from Christman Field,0
+20210529,18,182531,1834,1,843.7,18.4,54.1,7,sfc. measurement from Christman Field,0
+20210605,18,182251,2132,1,837.9,30.8,22,3,sfc. measurement from Christman Field,0
+20210606,18,173527,2136,1,836.7,28.9,24.3,3,sfc. measurement from Christman Field,0
+20210620,18,175837,1842,1,840.34,23.6,32.4,1,sfc. measurement from Christman Field,1
+20210624,18,175320,1840,1,842.7,25.8,33.9,7,sfc. measurement from Christman Field,1
+20210625,18,173800,1838,1,841.4,21.6,56.9,5,sfc. measurement from Christman Field,1
+20210626,18,174122,2135,1,845.2,20.5,50.8,6,sfc. measurement from Christman Field,1
+20210627,18,173943,2137,1,846.96,21.5,40.3,5,sfc. measurement from Christman Field,1
+20210628,18,175003,2954,1,849.48,15,70.3,7,sfc. measurement from Christman Field,1
+20210630,18,175502,2953,1,847.1,24.3,41.3,1,sfc. measurement from Christman Field,1
+20210701,18,174039,2955,1,846.95,24.3,56.9,6,sfc. measurement from Christman Field,1
+20210701,21,203903,2952,1,847.13,20.8,61.2,8,sfc. measurement from Christman Field,1
+20210702,18,180501,2956,1,846.21,24.1,56.8,1,sfc. measurement from Christman Field,1
+20210703,18,180530,2957,1,843.9,28.9,38.8,6,sfc. measurement from Christman Field,1
+20210705,18,180208,2959,1,845,28.7,32.1,2,sfc. measurement from Christman Field,1
+20210705,21,204640,2958,1,844.5,29.3,32.6,7,sfc. measurement from Christman Field,1
+20210709,18,183337,2962,1,844.2,33.3,26.9,2,sfc. measurement from Christman Field,1
+20210713,18,,,,,,,,,1
+20210714,18,,,,,,,,,1
+20210714,21,,,,,,,,,1
