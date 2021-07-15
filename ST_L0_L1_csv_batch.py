@@ -125,7 +125,7 @@ def output_L1(ST_no, loaded_ST_file, L1_data, L1_csv_filename):
 
         for index, row in L1_data.iterrows():
 
-            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%2f,%7.1f\n'\
+            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%2f,%7.1f,%3f,%5.3f\n'\
                        % (row['Time(sec)']\
                         , row['Pressure(hPa)']\
                         , row['Temperature(degree C)']\
