@@ -20,8 +20,11 @@ from metpy.units import units
 # Download the online log as csv format before read.
 ST_info_file = sys.argv[1]
 
+# Set ST L0 files path:
+ST_L0_file_path = '/Users/yuhungjui/GoogleDrive_CSU/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L0'
+
 # Set output path:
-output_path = '/Users/yuhungjui/GoogleDrive_CSU/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L1_csv/'
+output_path = '/Users/yuhungjui/GoogleDrive_CSU/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L1_csv'
 
 # Set final launch date:
 final_date = dt.datetime(2021,6,25)
@@ -79,7 +82,7 @@ def conversion_L0_L1(loaded_ST_file):
     L0_raw_data.loc[L0_raw_data['Speed(km/hr)'] == 0, 'WDIR'] = 0
 
     # Find the index of launch time and convert L0 to L1 data:
-    L1_data = L0_raw_data[L0_raw_data['Time'] >= launch_time_utc]
+    L1_data = L0_raw_data[L0_raw_data['Time'] >= launch_time_utc].copy()
 
     # Set Time(sec) in L1 data:
     L1_data['Time(sec)'] = (L1_data['Time']-launch_time_utc).dt.total_seconds()
@@ -87,12 +90,9 @@ def conversion_L0_L1(loaded_ST_file):
     return L1_data
 
 # %%
-def output_L1(loaded_ST_file, L1_data, L1_output_path):
+def output_L1(ST_no, loaded_ST_file, L1_data, L1_csv_filename):
 
     # Output L1 data (csv format):
-
-    L1_csv_filename = 'no_{}_L1_aspen.csv'.format(ST_no)
-
     with open(L1_csv_filename, 'w') as file:
 
         # Required fields:
@@ -118,14 +118,14 @@ def output_L1(loaded_ST_file, L1_data, L1_output_path):
         file.write('launchsite,"Christman Field"\n')
 
         # Data headers:
-        file.write('Fields,Time,Pressure,Temperature,RH,Speed,Direction,Latitude,Longitude,Altitude,gpsalt\n')
-        file.write('Units,sec,mb,deg C,%,m/s,deg,deg,deg,m,m\n')
+        file.write('Fields,Time,Pressure,Temp,RH,Speed,Direction,Latitude,Longitude,altitude,sats,gpsalt,SNR,Voltage\n')
+        file.write('Units,sec,mb,deg C,%,m/s,deg,deg,deg,m,,m,,V\n')
 
         # Data fields:
 
         for index, row in L1_data.iterrows():
 
-            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%7.1f\n'\
+            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%2f,%7.1f\n'\
                        % (row['Time(sec)']\
                         , row['Pressure(hPa)']\
                         , row['Temperature(degree C)']\
@@ -134,7 +134,10 @@ def output_L1(loaded_ST_file, L1_data, L1_output_path):
                         , row['Direction(degree)']\
                         , row['Lat']\
                         , row['Lon']\
+                        , row['Sat']\
                         , row['Height(m)']\
+                        , row['SNR']\
+                        , row['Voltage(V)']\
                          )\
                       )
 
@@ -159,7 +162,7 @@ for index, row in ST_info.iterrows():
         L1_data = conversion_L0_L1(loaded_ST_file)
 
         L1_output_name = output_path + '/precip21_{}.ST_{}.csv'.format(str(row['Date']) + str(row['Nominal_T']), str(row['ST_No'])[:4])
-        output_L1(loaded_ST_file, L1_data, L1_output_name)
+        output_L1(str(row['ST_No'])[:4], loaded_ST_file, L1_data, L1_output_name)
 
         print('>>> {} processed.'.format(str(row['Date']) + str(row['Nominal_T'])))
 
