@@ -1,42 +1,30 @@
 """
-<br>Transform Storm Tracker L0 data to L1 csv format file (batch mode).<br>
-Hungjui Yu<br>
-20210715<br>
+Transform Storm Tracker L0 data to L1 csv format file (batch mode).
+Hungjui Yu
+20210715
+
+How to run:
+python ST_L0_L1_csv_batch.py path_to_ST_log_file_csv
 """
 
-# %%
-%reset
-
+import sys
+import time
 import pandas as pd
 import datetime as dt
 import pytz
-# import metpy.calc as mpcalc
 from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import units
 
 # %%
-# # Set ST node number:
-# ST_no = 2968
-
-# # Set ST launch time (UTC):
-# launch_time_from_log = '20210503184852'
-
-# # Set ST files path:
-# ST_file_path = './'
-
 # Set ST_info file path:
-# ST_info_file = './log_online.xlsx'
-ST_info_file = './log_online - PRE-CIP_2021_ST_log.csv'
+# Download the online log as csv format before read.
+ST_info_file = sys.argv[1]
 
-# %%
 # Set output path:
+output_path = '/Users/yuhungjui/GoogleDrive_CSU/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L1_csv/'
 
-output_path = '/Users/yuhungjui/GoogleDrive_CSU/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L1_csv'
-
-# Set final date of launches:
-
-final_date = dt.datetime(2021,7,9)
-
+# Set final launch date:
+final_date = dt.datetime(2021,6,25)
 
 # %%
 def read_in_ST_info(log_file):
@@ -47,24 +35,6 @@ def read_in_ST_info(log_file):
 
     return ST_log
 
-ST_info = read_in_ST_info(ST_info_file)
-
-# print(type(ST_info))
-
-# %%
-# ST_info.head()
-# ST_info['Date']
-# print(str(ST_info['Date'][0]))
-# print(dt.datetime.strptime(str(ST_info['Date'][0]), '%Y%m%d'))
-
-
-
-for index, row in ST_info.iterrows():
-
-    if dt.datetime.strptime(str(row['Date']), '%Y%m%d') <= final_date:
-
-        print(row['Date'],row['Launch_T'])
-
 # %%
 def load_st_file(ST_no, launch_time_from_log, ST_file_path):
 
@@ -74,7 +44,7 @@ def load_st_file(ST_no, launch_time_from_log, ST_file_path):
     tz_fc = pytz.timezone('US/Mountain')
 
     # Specified the launch time in UTC:
-    launch_time = datetime.strptime(launch_time_from_log, '%Y%m%d%H%M%S')
+    launch_time = dt.datetime.strptime(launch_time_from_log, '%Y%m%d%H%M%S')
     launch_time_utc = tz_utc.localize(launch_time)
 
     # print(launch_time_utc)
@@ -117,7 +87,7 @@ def conversion_L0_L1(loaded_ST_file):
     return L1_data
 
 # %%
-def output_L1():
+def output_L1(loaded_ST_file, L1_data, L1_output_path):
 
     # Output L1 data (csv format):
 
@@ -169,3 +139,36 @@ def output_L1():
                       )
 
 # %%
+# MAIN PROGRAM:
+# %%
+# MAIN PROGRAM:
+t_start = time.process_time()
+
+ST_info = read_in_ST_info(ST_info_file)
+
+for index, row in ST_info.iterrows():
+
+    if dt.datetime.strptime(str(row['Date']), '%Y%m%d') <= final_date:
+
+        log_launchT = str(row['Date']) + str(row['Launch_T'])[:6]
+
+        st_file_date_path = ST_L0_file_path + '/{}'.format(str(row['Date']))
+
+        loaded_ST_file = load_st_file(str(row['ST_No'])[:4], log_launchT, st_file_date_path)
+
+        L1_data = conversion_L0_L1(loaded_ST_file)
+
+        L1_output_name = output_path + '/precip21_{}.ST_{}.csv'.format(str(row['Date']) + str(row['Nominal_T']), str(row['ST_No'])[:4])
+        output_L1(loaded_ST_file, L1_data, L1_output_name)
+
+        print('>>> {} processed.'.format(str(row['Date']) + str(row['Nominal_T'])))
+
+t_finish = time.process_time()
+print('Process Time: %f Sec' % (t_finish - t_start))
+
+# print(type(ST_info))
+# %%
+# ST_info.head()
+# ST_info['Date']
+# print(str(ST_info['Date'][0]))
+# print(dt.datetime.strptime(str(ST_info['Date'][0]), '%Y%m%d'))
