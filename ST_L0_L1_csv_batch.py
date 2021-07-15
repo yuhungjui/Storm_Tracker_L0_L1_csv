@@ -118,7 +118,7 @@ def output_L1(ST_no, loaded_ST_file, L1_data, L1_csv_filename):
         file.write('launchsite,"Christman Field"\n')
 
         # Data headers:
-        file.write('Fields,Time,Pressure,Temp,RH,Speed,Direction,Latitude,Longitude,altitude,sats,gpsalt,SNR,Voltage\n')
+        file.write('Fields,Time,Pressure,Temperature,RH,Speed,Direction,Latitude,Longitude,altitude,sats,gpsalt,SNR,Voltage\n')
         file.write('Units,sec,mb,deg C,%,m/s,deg,deg,deg,m,,m,,V\n')
 
         # Data fields:
