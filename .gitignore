@@ -1,4 +1,6 @@
 
+.DS_Store
+
 /no_*
 
 /Example/.ipynb_checkpoints/
