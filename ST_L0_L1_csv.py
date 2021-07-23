@@ -85,7 +85,7 @@ def output_L1():
 
     # Output L1 data (csv format):
 
-    L1_csv_filename = output_path + 'no_{}_L1_aspen.csv'.format(ST_no)
+    L1_csv_filename = output_path + '/no_{}_L1_aspen.csv'.format(ST_no)
 
     with open(L1_csv_filename, 'w') as file:
 
