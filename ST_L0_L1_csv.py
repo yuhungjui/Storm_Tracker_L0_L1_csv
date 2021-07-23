@@ -16,14 +16,14 @@ from metpy.calc import dewpoint_from_relative_humidity
 from metpy.units import units
 
 # %%
+# Set L0 ST files path:
+ST_file_path = sys.argv[1]
+
 # Set ST node number:
 ST_no = sys.argv[1][-8:-4]
 
 # Set ST launch time (UTC):
 launch_time_from_log = sys.argv[2]
-
-# Set L0 ST files path:
-ST_file_path = sys.argv[1]
 
 # Set L1 ST file output path:
 output_path = sys.argv[3]
@@ -122,7 +122,7 @@ def output_L1():
 
         for index, row in L1_data.iterrows():
 
-            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,%7.1f,%2.0f\n'\
+            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%2f,%7.1f,%3f,%5.3f\n'\
                        % (row['Time(sec)']\
                         , row['Pressure(hPa)']\
                         , row['Temperature(degree C)']\
@@ -131,8 +131,10 @@ def output_L1():
                         , row['Direction(degree)']\
                         , row['Lat']\
                         , row['Lon']\
-                        , row['Height(m)']\
                         , row['Sat']\
+                        , row['Height(m)']\
+                        , row['SNR']\
+                        , row['Voltage(V)']\
                          )\
                       )
 
