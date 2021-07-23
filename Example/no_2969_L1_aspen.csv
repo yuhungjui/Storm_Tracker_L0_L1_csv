@@ -15,8 +15,8 @@ agency,"CSU"
 sondeid,"2969"
 sondetype,"Storm Tracker"
 launchsite,"Christman Field"
-Fields,Time,Pressure,temperature,RH,Speed,Direction,Latitude,Longitude,gpsalt,sats
-Units,sec,mb,deg C,%,m/s,deg,deg,deg,m
+Fields,Time,Pressure,Temperature,RH,Speed,Direction,Latitude,Longitude,altitude,sats,gpsalt,SNR,Voltage
+Units,sec,mb,deg C,%,m/s,deg,deg,deg,m,,m,,V
 Data,   0.0, 846.98,30.40,45.40,  0.09,319.97, 40.59024,-105.14144,,7.000000, 1555.5,9.000000,1.548
 Data,   1.0, 846.95,30.37,45.60,  0.08,319.97, 40.59024,-105.14144,,7.000000, 1555.5,9.000000,1.548
 Data,   2.0, 847.00,30.34,45.70,  0.03,319.97, 40.59024,-105.14144,,7.000000, 1555.8,9.000000,1.548
