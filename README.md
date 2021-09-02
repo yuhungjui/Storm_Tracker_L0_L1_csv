@@ -20,6 +20,11 @@ python3 ST_L0_L1_csv.py path_to_ST_file log_launch_time_YYYYMMDDHHmmss path_to_o
 ```
 The input launch time is a 14-digits UTC date and time from year to second, YYYYMMDDHHmmss.
 
+For example, 
+```
+python3 ST_L0_L1_csv.py ./Example/no_2968.csv 20210503184852
+```
+
 ### In batch mode for multiple STs:
 ```
 python3 ST_L0_L1_csv_batch.py
