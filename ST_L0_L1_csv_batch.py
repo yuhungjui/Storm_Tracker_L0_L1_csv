@@ -22,13 +22,13 @@ from metpy.units import units
 ST_info_file = sys.argv[1]
 
 # Set ST L0 files path:
-ST_L0_file_path = '/Users/yuhungjui/GoogleDrive_CSU/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L0'
+ST_L0_file_path = '/Users/yuhungjui/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L0'
 
 # Set output path:
-output_path = '/Users/yuhungjui/GoogleDrive_CSU/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L1_csv'
+output_path = '/Users/yuhungjui/Research/CSU_2021/PRECIP_2021/StormTracker/Data/L1_csv'
 
 # Set final launch date:
-final_date = dt.datetime(2021,6,25)
+final_date = dt.datetime(2021,8,31)
 
 # %%
 def read_in_ST_info(log_file):
@@ -142,8 +142,7 @@ def output_L1(ST_no, loaded_ST_file, L1_data, L1_csv_filename):
                          )\
                       )
 
-# %%
-# MAIN PROGRAM:
+
 # %%
 # MAIN PROGRAM:
 t_start = time.process_time()
