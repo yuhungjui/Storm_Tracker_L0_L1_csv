@@ -116,17 +116,17 @@ def output_L1(ST_no, loaded_ST_file, L1_data, L1_csv_filename):
         file.write('agency,"CSU"\n')
         file.write('sondeid,"{}"\n'.format(ST_no))
         file.write('sondetype,"Storm Tracker"\n')
-        file.write('launchsite,"Christman Field"\n')
+        file.write('launchsite,"Christman Field"\n\n')
 
         # Data headers:
-        file.write('Fields,Time,Pressure,Temperature,RH,Speed,Direction,Latitude,Longitude,altitude,sats,gpsalt,SNR,Voltage\n')
-        file.write('Units,sec,mb,deg C,%,m/s,deg,deg,deg,m,,m,,V\n')
+        file.write('Fields,    Time,    Pressure,    Temperature,    RH,    Speed,    Direction,    Latitude,    Longitude,    Altitude,    Sats,    Gpsalt,    SNR,    Voltage \n')
+        file.write('Units,       ec,          mb,          deg C,     %,      m/s,          deg,         deg,          deg,           m,        ,         m,       ,          V \n')
 
         # Data fields:
 
         for index, row in L1_data.iterrows():
 
-            file.write('Data,%6.1f,%7.2f,%5.2f,%5.2f,%6.2f,%6.2f,%9.5f,%9.5f,,%2f,%7.1f,%3f,%5.3f\n'\
+            file.write('Data,    %6.1f,    %7.2f,    %6.2f,    %6.2f,    %6.2f,    %6.2f,    %9.5f,    %9.5f,    ,    %2.0f,    %7.1f,    %3.0f,    %5.3f \n'\
                        % (row['Time(sec)']\
                         , row['Pressure(hPa)']\
                         , row['Temperature(degree C)']\
@@ -161,7 +161,7 @@ for index, row in ST_info.iterrows():
 
         L1_data = conversion_L0_L1(loaded_ST_file)
 
-        L1_output_name = output_path + '/precip21_{}.ST_{}.csv'.format(str(row['Date']) + str(row['Nominal_T']), str(row['ST_No'])[:4])
+        L1_output_name = output_path + '/2021' + '/precip21_{}.ST_{}.csv'.format(str(row['Date']) + str(row['Nominal_T']), str(row['ST_No'])[:4])
         output_L1(str(row['ST_No'])[:4], loaded_ST_file, L1_data, L1_output_name)
 
         print('>>> {} processed.'.format(str(row['Date']) + str(row['Nominal_T'])))
